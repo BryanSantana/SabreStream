@@ -1,5 +1,6 @@
 const Event = require('../models/Event');
-
+const User = require('../models/User');
+const UserEvent = require('../models/UserEvent');
 exports.createEvent = async (req, res) => {
   const { name, date, location, clubId } = req.body;
 
@@ -68,6 +69,67 @@ exports.deleteEvent = async (req, res) => {
     await event.destroy();
 
     res.status(200).json({ message: 'Event deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+};
+
+exports.signUpForEvent = async (req, res) => {
+  const { userId, eventId } = req.body;
+
+  try {
+    const event = await Event.findByPk(eventId);
+    const user = await User.findByPk(userId);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    let userEvent = await UserEvent.findOne({ where: { userId, eventId } });
+
+    if (!userEvent) {
+      userEvent = await UserEvent.create({ userId, eventId, signedUp: true });
+    } else {
+      userEvent.signedUp = true;
+      await userEvent.save();
+    }
+
+    res.status(200).json({ message: 'User signed up for the event successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.checkInUser = async (req, res) => {
+  const { userId, eventId } = req.body;
+
+  try {
+    const event = await Event.findByPk(eventId);
+    const user = await User.findByPk(userId);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    let userEvent = await UserEvent.findOne({ where: { userId, eventId } });
+
+    if (!userEvent || !userEvent.signedUp) {
+      return res.status(400).json({ message: 'User has not signed up for the event' });
+    }
+
+    userEvent.checkedIn = true;
+    await userEvent.save();
+
+    res.status(200).json({ message: 'User checked in successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

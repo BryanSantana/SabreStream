@@ -31,5 +31,6 @@ const User = sequelize.define('User', {
 User.belongsTo(Family, { foreignKey: 'familyId' });
 User.belongsTo(Club, { foreignKey: 'clubId' });
 User.hasMany(Payment, {foreignKey: 'userId'});
+User.hasOne(QrCode, { foreignKey: 'userId' });
 module.exports = User;
 

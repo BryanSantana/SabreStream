@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const QrCode = require('../models/QrCode');
 
 exports.registerUser = async (req, res) => {
   const { name, email, password, role, familyId, clubId } = req.body;
@@ -17,6 +18,9 @@ exports.registerUser = async (req, res) => {
     const user = await User.create({ name, email, password: hashedPassword, role, familyId, clubId });
 
     const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    const qrCodeData = await QRCode.toDataURL(user.id);
+    await QrCode.create({ qrCodeData, userId: user.id });
 
     res.status(201).json({ user, token });
   } catch (error) {
@@ -105,6 +109,20 @@ exports.deleteUser = async (req, res) => {
     await user.destroy();
 
     res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getUserQrCode = async (req, res) => {
+  try {
+    const qrCode = await QrCode.findOne({ where: { userId: req.params.id } });
+
+    if (!qrCode) {
+      return res.status(404).json({ message: 'QR code not found' });
+    }
+
+    res.status(200).json({ qrCodeData: qrCode.qrCodeData });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
