@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Database files
+*.sqlite3
+
+# MacOS
+.DS_Store
+
+# Other
+coverage/
+dist/

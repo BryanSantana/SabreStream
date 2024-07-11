@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
+const sequelize = require('../config/db');
 
 const QrCode = sequelize.define('QrCode', {
   id: {
@@ -13,7 +12,5 @@ const QrCode = sequelize.define('QrCode', {
     allowNull: false,
   },
 });
-
-QrCode.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = QrCode;

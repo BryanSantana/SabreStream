@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
-const Club = require('./Club');
+const sequelize = require('../config/db');
 
 const Payment = sequelize.define('Payment', {
   id: {
@@ -18,9 +16,6 @@ const Payment = sequelize.define('Payment', {
     defaultValue: 'pending',
   },
 });
-
-Payment.belongsTo(User, { foreignKey: 'userId' });
-Payment.belongsTo(Club, { foreignKey: 'clubId' });
 
 module.exports = Payment;
 

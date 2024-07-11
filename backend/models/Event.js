@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const Club = require('./Club');
+const sequelize = require('../config/db');
 
 const Event = sequelize.define('Event', {
   id: {
@@ -20,8 +19,11 @@ const Event = sequelize.define('Event', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-});
 
-Event.belongsTo(Club, { foreignKey: 'clubId' });
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+});
 
 module.exports = Event;

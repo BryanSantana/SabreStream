@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../config/db');
 
 const Club = sequelize.define('Club', {
   id: {
@@ -20,5 +20,4 @@ const Club = sequelize.define('Club', {
   },
 });
 
-Club.hasMany(Payment, {foreignKey: 'cludId'});
 module.exports = Club;

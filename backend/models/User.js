@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const Family = require('./Family');
-const Club = require('./Club');
+const sequelize = require('../config/db');
 
 const User = sequelize.define('User', {
   id: {
@@ -28,9 +26,5 @@ const User = sequelize.define('User', {
   },
 });
 
-User.belongsTo(Family, { foreignKey: 'familyId' });
-User.belongsTo(Club, { foreignKey: 'clubId' });
-User.hasMany(Payment, {foreignKey: 'userId'});
-User.hasOne(QrCode, { foreignKey: 'userId' });
 module.exports = User;
 

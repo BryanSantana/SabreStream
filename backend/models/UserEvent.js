@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
-const Event = require('./Event');
+const sequelize = require('../config/db');
 
 const UserEvent = sequelize.define('UserEvent', {
   id: {
@@ -26,8 +24,5 @@ const UserEvent = sequelize.define('UserEvent', {
     defaultValue: false,
   },
 });
-
-UserEvent.belongsTo(User, { foreignKey: 'userId' });
-UserEvent.belongsTo(Event, { foreignKey: 'eventId' });
 
 module.exports = UserEvent;

@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../config/db');
 
 const Announcement = sequelize.define('Announcement', {
   id: {
@@ -17,6 +17,5 @@ const Announcement = sequelize.define('Announcement', {
   },
 });
 
-Announcement.belongsTo(User, { foreignKey: 'userId' });
 
-module.exports = Event;
+module.exports = Announcement;
