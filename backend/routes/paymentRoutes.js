@@ -1,9 +1,8 @@
 const express = require('express');
-const { createPayment, getPayments, getPaymentById } = require('../controllers/paymentController');
 const router = express.Router();
+const {createPaymentIntent, paymentController} = require('../controllers/paymentController');
 
-router.post('/', createPayment);
-router.get('/', getPayments);
-router.get('/:id', getPaymentById);
+router.post('/create-payment-intent', createPaymentIntent);
+router.post('/webhook', handleWebhook);
 
 module.exports = router;

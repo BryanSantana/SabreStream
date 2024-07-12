@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const QrCode = require('../models/QrCode');
+const QRCode = require('qrcode')
 
 exports.registerUser = async (req, res) => {
   const { name, email, password, role, familyId, clubId } = req.body;
