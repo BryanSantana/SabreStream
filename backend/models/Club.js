@@ -18,6 +18,10 @@ const Club = sequelize.define('Club', {
   description: {
     type: DataTypes.STRING,
   },
+  stripeAccountId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
 });
 
 module.exports = Club;

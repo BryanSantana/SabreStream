@@ -15,6 +15,22 @@ const Payment = sequelize.define('Payment', {
     type: DataTypes.ENUM('pending', 'completed', 'failed'),
     defaultValue: 'pending',
   },
+  stripePaymentIntentId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  recipientId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  recipientType: {
+    type: DataTypes.ENUM('coach', 'club'),
+    allowNull: false,
+  },
 });
 
 module.exports = Payment;

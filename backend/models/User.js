@@ -24,6 +24,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('member', 'coach', 'admin', 'parent'),
     defaultValue: 'member',
   },
+  stripeAccountId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = User;
