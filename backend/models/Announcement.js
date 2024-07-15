@@ -18,4 +18,4 @@ const Announcement = sequelize.define('Announcement', {
 });
 
 
-module.exports = Announcement;
+module.exports = Announcement;  
