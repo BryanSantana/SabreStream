@@ -1,5 +1,6 @@
 const express = require('express');
 const { registerUser, loginUser, getUsers, getUserById, updateUser, deleteUser, getUserQrCode } = require('../controllers/userController');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 router.post('/register', registerUser);

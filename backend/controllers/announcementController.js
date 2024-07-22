@@ -10,12 +10,20 @@ exports.createAnnouncement = async (req, res) => {
   }
 };
 
-exports.getAnnouncements = async (req, res) => {
+exports.getAnnouncementsByClubId = async (req, res) => {
   try {
-    const announcements = await Announcement.findAll();
-    res.status(200).json(announcements);
+    const { clubId } = req.params;
+    const announcements = await Announcement.findAll({
+      where: { clubId }
+    });
+
+    if (!announcements || announcements.length === 0) {
+      return res.status(404).json({ message: 'No announcements found for this club' });
+    }
+
+    res.status(200).json(events);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

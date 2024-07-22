@@ -2,24 +2,33 @@ const Event = require('../models/Event');
 const User = require('../models/User');
 const UserEvent = require('../models/UserEvent');
 exports.createEvent = async (req, res) => {
-  const { name, date, location, clubId } = req.body;
-
+  const { name, date, location, type, clubId, userId } = req.body;
   try {
-    const event = await Event.create({ name, date, location, clubId });
+    const event = await Event.create({ name, date, location, type, clubId , userId});
     res.status(201).json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.getEvents = async (req, res) => {
+
+exports.getEventsByClubId = async (req, res) => {
   try {
-    const events = await Event.findAll();
+    const { clubId } = req.params;
+    const events = await Event.findAll({
+      where: { clubId }
+    });
+
+    if (!events || events.length === 0) {
+      return res.status(404).json({ message: 'No events found for this club' });
+    }
+
     res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getEventById = async (req, res) => {
   try {

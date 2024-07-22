@@ -1,9 +1,9 @@
 const express = require('express');
-const { createAnnouncement, getAnnouncements, getAnnouncementById,  deleteAnnouncement } = require('../controllers/announcementController');
+const { createAnnouncement, getAnnouncementById,  deleteAnnouncement, getAnnouncementsByClubId } = require('../controllers/announcementController');
 const router = express.Router();
 
 router.post('/', createAnnouncement);
-router.get('/', getAnnouncements);
+router.get('/:clubId', getAnnouncementsByClubId);
 router.get('/:id', getAnnouncementById);
 router.delete('/:id', deleteAnnouncement);
 
