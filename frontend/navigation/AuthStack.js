@@ -1,18 +1,21 @@
-// AuthStack.js
+// AppNavigator.js
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens//RegisterScreen';
+import RegisterTabs from './RegisterTabs';
+
 
 const Stack = createStackNavigator();
 
-const AuthStack = () => {
+const AppNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-    </Stack.Navigator>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" component={WelcomeScreen}/>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register as..." component={RegisterTabs} />
+      </Stack.Navigator>
   );
 };
 
-export default AuthStack;
+export default AppNavigator;

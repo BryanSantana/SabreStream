@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
+import WelcomeScreen from '../screens/WelcomeScreen';
 
 
 function AppNav () {
