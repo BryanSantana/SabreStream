@@ -2,7 +2,23 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const QrCode = require('../models/QrCode');
-const QRCode = require('qrcode')
+const QRCode = require('qrcode');
+
+exports.uploadProfilePicture = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.profilePicture = req.file.location;
+    await user.save();
+
+    res.status(200).json({ message: 'Profile picture uploaded successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.registerUser = async (req, res) => {
   const { name, email, password, role, familyId, clubId } = req.body;

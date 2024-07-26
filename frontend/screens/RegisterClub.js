@@ -10,7 +10,7 @@ const RegisterClub = () => {
     />
     <TextInput 
     style = {styles.input}
-    placeholder=""
+    placeholder="Club Address"
     />
     <Button title="Next" />
   </View>

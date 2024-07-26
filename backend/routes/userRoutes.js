@@ -1,8 +1,10 @@
 const express = require('express');
-const { registerUser, loginUser, getUsers, getUserById, updateUser, deleteUser, getUserQrCode } = require('../controllers/userController');
+const { registerUser, loginUser, getUsers, getUserById, updateUser, deleteUser, getUserQrCode, uploadProfilePicture } = require('../controllers/userController');
 const jwt = require('jsonwebtoken');
+const upload = require('../middleware/upload');
 const router = express.Router();
 
+router.post('/upload-profile-picture/:id', upload.single('profilePicture'), uploadProfilePicture);
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/', getUsers);
