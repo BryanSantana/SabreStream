@@ -1,16 +1,19 @@
 // AnnoucnementScreen.js
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import {getAnnouncementsByClubId} from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import Modal from 'react-native-modal';
 
 const AnnouncementScreen = ({ clubId }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const {userInfo} = useContext(AuthContext);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [formData, setFormData] = useState({ });
   const userClub = userInfo['user']['clubId']
-
+  const userRole = userInfo['user']['role']
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
@@ -34,9 +37,16 @@ const AnnouncementScreen = ({ clubId }) => {
     return <Text>Error: {error}</Text>;
   }
 
+  const handleCreateAnnouncement = () => {
+    setModalVisible(true);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Announcements</Text>
+      {userRole === 'admin' || userRole === 'coach' ? (
+        <Button title="Create Announcement" />
+      ) : null}
       <FlatList
         data={announcements}
         keyExtractor={(item) => item.id}

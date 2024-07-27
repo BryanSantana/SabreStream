@@ -33,4 +33,28 @@ const getEventsByClubId = async (clubId) => {
         console.error('Error fetching announcements', error)
     }
       }
-  export {getEventsByClubId, getAnnouncementsByClubId};
+
+      const createEvent = async (eventData) => {
+        try {
+          console.log(eventData)
+            const response = await fetch(`${BASE_URL}/events`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(eventData)
+            });
+    
+            if (response.ok) {
+                const event = await response.json();
+                return event;
+            } else {
+                console.error('Error creating event:', response.statusText);
+                throw new Error('Error creating event');
+            }
+        } catch (error) {
+            console.error('Error creating event:', error);
+            throw error;
+        }
+    };
+  export {getEventsByClubId, getAnnouncementsByClubId, createEvent};

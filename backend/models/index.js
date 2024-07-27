@@ -20,6 +20,7 @@ User.hasOne(QrCode, { foreignKey: 'userId' });
 UserEvent.belongsTo(User, { foreignKey: 'userId' });
 UserEvent.belongsTo(Event, { foreignKey: 'eventId' });
 Announcement.belongsTo(User, { foreignKey: 'userId' });
+Announcement.belongsTo(Club, { foreignKey: 'clubId'})
 
 const db = {
   sequelize,

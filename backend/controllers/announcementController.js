@@ -1,9 +1,9 @@
 const Announcement = require('../models/Announcement');
 
 exports.createAnnouncement = async (req, res) => {
-    const {message, date, userId} = req.body;
+    const {message, date, userId, clubId }= req.body;
   try {
-    const announcement = await Announcement.create({message, date, userId});
+    const announcement = await Announcement.create({message, date, userId, clubId});
     res.status(201).json(announcement);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -21,7 +21,7 @@ exports.getAnnouncementsByClubId = async (req, res) => {
       return res.status(404).json({ message: 'No announcements found for this club' });
     }
 
-    res.status(200).json(events);
+    res.status(200).json(announcements);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
