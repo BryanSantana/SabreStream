@@ -57,4 +57,30 @@ const getEventsByClubId = async (clubId) => {
             throw error;
         }
     };
-  export {getEventsByClubId, getAnnouncementsByClubId, createEvent};
+
+    const createAnnouncement = async (announcementData) => {
+      console.log(announcementData)
+      try {
+          const response = await fetch(`${BASE_URL}/announcements`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(announcementData)
+          });
+          console.log(response)
+          if (response.ok) {
+              const annnouncement = await response.json();
+              return annnouncement;
+          } else {
+              console.error("hereeeee")
+              console.error('Error creating announcement:', response.statusText);
+              throw new Error('Error creating announcement');
+          }
+      } catch (error) {
+          console.error('Error creating announcement:', error);
+          throw error;
+      }
+  };
+  
+  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement};

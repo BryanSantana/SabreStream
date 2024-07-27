@@ -1,9 +1,14 @@
 const Announcement = require('../models/Announcement');
+const User = require('../models/User');
 
 exports.createAnnouncement = async (req, res) => {
     const {message, date, userId, clubId }= req.body;
+    if (!message || !date || !clubId || !userId) {
+      console.error('Missing fields in request:', req.body);
+      return res.status(400).json({ message: 'All fields are required' });
+    }
   try {
-    const announcement = await Announcement.create({message, date, userId, clubId});
+    const announcement = await Announcement.create({message, date, date, userId, clubId});
     res.status(201).json(announcement);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -14,7 +19,11 @@ exports.getAnnouncementsByClubId = async (req, res) => {
   try {
     const { clubId } = req.params;
     const announcements = await Announcement.findAll({
-      where: { clubId }
+      where: { clubId },
+      include: {
+        model: User,
+        attributes: ['name'],
+      },
     });
 
     if (!announcements || announcements.length === 0) {
