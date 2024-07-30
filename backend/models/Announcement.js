@@ -15,6 +15,12 @@ const Announcement = sequelize.define('Announcement', {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  likesCount:{
+    type:DataTypes.INTEGER,
+    allowNull: false,
+  }
+}, {
+  timestamps:false,
 });
 
 
