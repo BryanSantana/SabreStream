@@ -1,7 +1,7 @@
 // AnnouncementScreen.js
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Button, TextInput } from 'react-native';
-import { getAnnouncementsByClubId, createAnnouncement } from '../services/api';
+import { getAnnouncementsByClubId, createAnnouncement, likeAnnouncement, unlikeAnnouncement } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import Modal from 'react-native-modal';
 
@@ -19,7 +19,7 @@ const AnnouncementScreen = ({ clubId }) => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const fetchedAnnouncements = await getAnnouncementsByClubId(userClub);
+        const fetchedAnnouncements = await getAnnouncementsByClubId(userClub, userId);
         setAnnouncements(fetchedAnnouncements);
       } catch (err) {
         setError(err.message);
@@ -53,12 +53,42 @@ const AnnouncementScreen = ({ clubId }) => {
       await createAnnouncement({ ...formData, date: currentDate, userId: userId, clubId: userClub });
       setModalVisible(false);
       setFormData({ message: '' });
-      const fetchedAnnouncements = await getAnnouncementsByClubId(userClub);
+      const fetchedAnnouncements = await getAnnouncementsByClubId(userClub, userId);
       setAnnouncements(fetchedAnnouncements);
     } catch (error) {
       console.error('Error creating announcement:', error);
     }
   };
+
+  const handleLike = async (announcementId) => {
+    try {
+      const announcement = announcements.find(a => a.id === announcementId);
+      const isLiked = announcement.likedByCurrentUser;
+
+      if (isLiked) {
+        await unlikeAnnouncement({ userId, announcementId });
+        const updatedAnnouncements = announcements.map(announcement => {
+          if (announcement.id === announcementId) {
+            return { ...announcement, likesCount: announcement.likesCount - 1, likedByCurrentUser: false };
+          }
+          return announcement;
+        });
+        setAnnouncements(updatedAnnouncements);
+      } else {
+        await likeAnnouncement({ userId, announcementId });
+        const updatedAnnouncements = announcements.map(announcement => {
+          if (announcement.id === announcementId) {
+            return { ...announcement, likesCount: announcement.likesCount + 1, likedByCurrentUser: true };
+          }
+          return announcement;
+        });
+        setAnnouncements(updatedAnnouncements);
+      }
+    } catch (error) {
+      console.error('Error liking/unliking announcement:', error);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -73,6 +103,12 @@ const AnnouncementScreen = ({ clubId }) => {
           <View style={styles.announcementItem}>
             <Text style={styles.announcementMessage}>{item.message}</Text>
             <Text>{new Date(item.date).toLocaleString()}</Text>
+            <Button 
+            style = {styles.announcementLikes} 
+            title = {String(item.likesCount)} 
+            onPress={() => handleLike(item.id)}
+            color={item.likedByCurrentUser ? 'red' : 'blue'}> 
+            </Button>
             <Text>Posted by: {item.User.name}</Text>
           </View>
         )}
@@ -131,6 +167,9 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
+  },
+  announcementLikes: {
+    alignSelf: 'flex-end',
   },
 });
 

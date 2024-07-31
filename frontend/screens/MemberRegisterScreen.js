@@ -18,15 +18,12 @@ const MemberRegisterScreen = () => {
     <TextInput
       style={styles.input}
       placeholder="Email"
-      //value={email}
-      //onChangeText={text => setEmail(text)}
       keyboardType="email-address"
       autoCapitalize="none"
     />
     <TextInput
       style={styles.input}
       placeholder="Password"
-      //value={password}
       onChangeText={text => setPassword(text)}
       secureTextEntry
     />

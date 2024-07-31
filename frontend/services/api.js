@@ -19,9 +19,9 @@ const getEventsByClubId = async (clubId) => {
     }
   };
 
-  const getAnnouncementsByClubId = async (clubId) => {
+  const getAnnouncementsByClubId = async (clubId, userId)=> {
     try{
-     link = `${BASE_URL}/announcements/${clubId}`
+     link = `${BASE_URL}/announcements/${clubId}?userId=${userId}`
      const response = await fetch (link, {
         method: 'GET'
      });
@@ -82,5 +82,48 @@ const getEventsByClubId = async (clubId) => {
           throw error;
       }
   };
+
+  const likeAnnouncement = async (likeData) => {
+    try {
+      const response = await fetch(`${BASE_URL}/announcements/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(likeData)
+      });
+      if (response.ok) {
+        const like = await response.json();
+        return like;
+      } else {
+        throw new Error('Error liking announcement');
+      }
+    } catch (error) {
+      console.error('Error liking announcement:', error);
+      throw error;
+    }
+  };
+
+const unlikeAnnouncement = async (likeData) => {
+    try {
+      const response = await fetch(`${BASE_URL}/announcements/unlike`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(likeData)
+      });
+      if (response.ok) {
+        const unlike = await response.json();
+        return unlike;
+      } else {
+        throw new Error('Error unliking announcement');
+      }
+    } catch (error) {
+      console.error('Error unliking announcement:', error);
+      throw error;
+    }
+  };
+
   
-  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement};
+  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement, likeAnnouncement, unlikeAnnouncement};
