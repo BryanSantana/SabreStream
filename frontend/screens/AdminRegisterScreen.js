@@ -1,58 +1,62 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
 const AdminRegisterScreen = ({navigation}) => {
- return (
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleNext = () => {
+    // Combine first name and last name
+    const name = `${firstName} ${lastName}`;
+    
+    // Navigate to the Register Club screen and pass the collected data
+    navigation.navigate("RegisterClub", { firstName, name, email, password });
+  };
+
+  return (
     <View style={styles.container}>
-  
-    <TextInput
-    style = {styles.input}
-    placeholder="First Name"
-    />
-    <TextInput 
-    style = {styles.input}
-    placeholder="Last Name"
-    />
-    <TextInput
-      style={styles.input}
-      placeholder="Email"
-      //value={email}
-      //onChangeText={text => setEmail(text)}
-      keyboardType="email-address"
-      autoCapitalize="none"
-    />
-    <TextInput
-      style={styles.input}
-      placeholder="Password"
-      //value={password}
-      //onChangeText={text => setPassword(text)}
-      secureTextEntry
-    />
-    <Button title="Next" onPress={() => navigation.navigate('Register Club')}/>
-  </View>
-);
+      <TextInput
+        style={styles.input}
+        placeholder="First Name"
+        value={firstName}
+        onChangeText={setFirstName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Last Name"
+        value={lastName}
+        onChangeText={setLastName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Next" onPress={handleNext} />
+    </View>
+  );
 };
 
-
 const styles = StyleSheet.create({
- container: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
     padding: 20,
- },
- title: {
-   fontSize: 24,
- },
- input: {
-    width: '100%',
-    height: 40,
+  },
+  input: {
+    marginBottom: 10,
+    padding: 10,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
   },
 });
-
 
 export default AdminRegisterScreen;

@@ -1,5 +1,78 @@
 const BASE_URL = 'http://localhost:5001/api'; // Replace with your API URL
 
+const registerUser = async (userData) => {
+  try {
+    console.log(userData)
+    link = `${BASE_URL}/users/register`
+    const response = await fetch(link, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    });
+    console.log(response)
+    if (response.ok){
+      const user = await response.json();
+      return user;
+  } else{
+    console.error('Error registering user:', response.statusText);
+    throw new Error('Error registering user');
+  }
+ } catch (error) {
+    console.error('Error registering user:', error);
+    throw error;
+}
+}
+
+const registerClub = async (clubData) => {
+  try {
+    link = `${BASE_URL}/clubs`
+    const response = await fetch(link, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(clubData)
+    });
+    if (response.ok){
+      const club = await response.json();
+      return club;
+  } else{
+    console.error('Error registering club:', response.statusText);
+    throw new Error('Error registering club');
+  }
+ } catch (error) {
+    console.error('Error registering club:', error);
+    throw error;
+}
+}
+
+
+const createAnnouncement = async (announcementData) => {
+  console.log(announcementData)
+  try {
+      const response = await fetch(`${BASE_URL}/announcements`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(announcementData)
+      });
+      console.log(response)
+      if (response.ok) {
+          const annnouncement = await response.json();
+          return annnouncement;
+      } else {
+          console.error("hereeeee")
+          console.error('Error creating announcement:', response.statusText);
+          throw new Error('Error creating announcement');
+      }
+  } catch (error) {
+      console.error('Error creating announcement:', error);
+      throw error;
+  }
+};
 
 const getEventsByClubId = async (clubId) => {
     try {
@@ -58,31 +131,7 @@ const getEventsByClubId = async (clubId) => {
         }
     };
 
-    const createAnnouncement = async (announcementData) => {
-      console.log(announcementData)
-      try {
-          const response = await fetch(`${BASE_URL}/announcements`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(announcementData)
-          });
-          console.log(response)
-          if (response.ok) {
-              const annnouncement = await response.json();
-              return annnouncement;
-          } else {
-              console.error("hereeeee")
-              console.error('Error creating announcement:', response.statusText);
-              throw new Error('Error creating announcement');
-          }
-      } catch (error) {
-          console.error('Error creating announcement:', error);
-          throw error;
-      }
-  };
-
+   
   const likeAnnouncement = async (likeData) => {
     try {
       const response = await fetch(`${BASE_URL}/announcements/like`, {
@@ -126,4 +175,4 @@ const unlikeAnnouncement = async (likeData) => {
   };
 
   
-  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement, likeAnnouncement, unlikeAnnouncement};
+  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement, likeAnnouncement, unlikeAnnouncement, registerClub, registerUser};
