@@ -2,9 +2,10 @@ import React,  { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import { registerClub } from '../services/api';
 import { registerUser } from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 
 
-const RegisterClub = ({ route}) => {
+const RegisterClub = ({ route, navigation}) => {
   const { firstName, name, email, password } = route.params;
   const [clubName, setClubName] = useState('')
   const [addressLine1, setAddressLine1] = useState('')
@@ -30,19 +31,12 @@ const RegisterClub = ({ route}) => {
         name, email, password, role:"admin", clubId
       }
       const user = await registerUser(userData)
-      console.log(user)
+      navigation.navigate("Set Up Stripe")
     } catch (error) {
       console.error('Error during club registration:', error);
     }
   };
 
-  const handleLogin = async () => {
-    
-  }
-
-
-  
-  
  return (
     <View style={styles.container}>
     <Text style ={styles.title}> Tell us a bit about your club, {firstName} </Text>
