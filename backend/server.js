@@ -8,6 +8,7 @@ const clubRoutes = require('./routes/clubRoutes');
 const announcementRoutes = require('./routes/announcementRoutes');
 const paymentRoutes = require("./routes/paymentRoutes")
 const eventRoutes = require('./routes/eventRoutes');
+const accountRoutes = require('./routes/accountRoutes')
 const dotenv = require('dotenv');
 
 dotenv.config()
@@ -25,6 +26,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/families', familyRoutes);
 app.use('/api/announcements', announcementRoutes)
 app.use('/api/payments', paymentRoutes);
+app.use('/api/account', accountRoutes)
 
 const PORT = process.env.PORT || 5001;
 

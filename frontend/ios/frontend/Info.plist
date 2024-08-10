@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>frontend</string>
+    <string>SabreStream</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -32,12 +32,13 @@
       </dict>
       <dict>
         <key>CFBundleURLName</key>
-        <string>auth0</string>
+        <string>com.yourcompany.sabrestream</string> <!-- Replace with your bundle identifier -->
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.auth0samples.auth0</string>
+          <string>sabrestream</string> <!-- This is your custom URL scheme for Stripe -->
         </array>
       </dict>
+    </array>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>

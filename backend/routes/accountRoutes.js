@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const{createConnectedAccount} = require('../controllers/accountController');
+const{createConnectedAccount, generateOnboardingLink} = require('../controllers/accountController');
 
-router.post('/create-account', createConnectedAccount);
-
+router.post('/', createConnectedAccount);
+router.post('/onboarding_link', generateOnboardingLink)
 module.exports = router;
