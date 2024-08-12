@@ -2,8 +2,6 @@ import React,  { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import { registerClub } from '../services/api';
 import { registerUser } from '../services/api';
-import { AuthContext } from '../context/AuthContext';
-
 
 const RegisterClub = ({ route, navigation}) => {
   const { firstName, name, email, password } = route.params;
@@ -24,14 +22,16 @@ const RegisterClub = ({ route, navigation}) => {
       };
   
       const club = await registerClub(clubData);
-      
-      console.log(club);
       const clubId = club['id']
       const userData = {
         name, email, password, role:"admin", clubId
       }
       const user = await registerUser(userData)
-      navigation.navigate("Set Up Stripe")
+      const userId = user['user']['id']
+      navigation.navigate("Set Up Stripe", {
+        userId: userId,
+        clubId: clubId
+      });
     } catch (error) {
       console.error('Error during club registration:', error);
     }

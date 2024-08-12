@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, Linking } from 'react-native';
 
-const StripeSetup = () => {
+const StripeSetup = ({navigation, route}) => {
   const [connectedAccountId, setConnectedAccountId] = useState(null);
   const [onboardingUrl, setOnboardingUrl] = useState('');
+  const { userId, clubId } = route.params;
 
   const createStripeAccount = async () => {
     try {
@@ -30,26 +31,52 @@ const StripeSetup = () => {
   };
 
   useEffect(() => {
-    const handleDeepLink = ({ url }) => {
-      if (url.includes('refresh')) {
-        console.log('Handle refresh here');
-      } else if (url.includes('return')) {
-        console.log('Handle return here');
+    const handleDeepLink = (event) => {
+      const url = event.url;
+      console.log('Deep link URL:', url);
+
+      if (url.startsWith('sabrestream://')) {
+        // Handle the deep link here
+        if (url.includes('refresh')) {
+          Alert.alert('Redirected from the refresh URL');
+        } else if (url.includes('return')) {
+          navigation.navigate('TierScreen', {
+            accountId: connectedAccountId,
+            userId,
+            clubId,
+          });
+        }
       }
     };
 
-    Linking.addEventListener('url', handleDeepLink);
+    // Add event listener for deep linking
+    const linkingSubscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Check if the app was opened via deep link
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
 
     return () => {
-      Linking.removeEventListener('url', handleDeepLink);
+      // Cleanup the event listener on unmount
+      linkingSubscription.remove();  // Use remove() on the subscription object
     };
-  }, []);
+  }, [connectedAccountId, userId, clubId]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Set Up Your Stripe Account</Text>
       <Button title="Sign Up" onPress={createStripeAccount} />
-      <Button title="Skip For Now" onPress={() => { }} />
+      <Button title="Skip For Now" onPress={() => { 
+      navigation.navigate('TierSetup', {
+      connectedAccountId,
+      userId,
+      clubId
+    });
+  }} />
+
     </View>
   );
 };

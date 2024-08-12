@@ -174,5 +174,31 @@ const unlikeAnnouncement = async (likeData) => {
     }
   };
 
+  const completeOnboarding = async (stripeAccountId) => {
+    try {
+      const response = await fetch('http://localhost:5001/api/completeOnboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          stripeAccountId,
+          userId: currentUser.id, 
+          clubId: currentClub.id, 
+        }),
+      });
   
-  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement, likeAnnouncement, unlikeAnnouncement, registerClub, registerUser};
+      if (!response.ok) {
+        throw new Error('Failed to complete onboarding');
+      }
+  
+      const data = await response.json();
+      console.log('Onboarding complete:', data);
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+    }
+  };
+  
+
+  
+  export {getEventsByClubId, getAnnouncementsByClubId, createEvent, createAnnouncement, likeAnnouncement, unlikeAnnouncement, registerClub, registerUser, completeOnboarding};

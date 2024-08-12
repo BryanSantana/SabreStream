@@ -32,10 +32,10 @@
       </dict>
       <dict>
         <key>CFBundleURLName</key>
-        <string>com.yourcompany.sabrestream</string> <!-- Replace with your bundle identifier -->
+        <string>com.yourcompany.sabrestream</string>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>sabrestream</string> <!-- This is your custom URL scheme for Stripe -->
+          <string>sabrestream</string>
         </array>
       </dict>
     </array>

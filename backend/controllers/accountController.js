@@ -33,8 +33,8 @@ exports.generateOnboardingLink = async (req, res) => {
     console.log(accountId)
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: 'sabrestream://refresh',
-      return_url: 'sabrestream://return',
+      refresh_url: 'https://sabrestreamredirect.web.app/refresh.html',
+      return_url: 'https://sabrestreamredirect.web.app/return.html',
       type: 'account_onboarding',
     });
 
@@ -48,3 +48,33 @@ exports.generateOnboardingLink = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.completeOnboarding = async (req, res) => {
+  const { stripeAccountId, userId, clubId } = req.body;
+
+  try {
+    // Find the user and update their stripeAccountId
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.stripeAccountId = stripeAccountId;
+    await user.save();
+
+    // Find the club and update its stripeAccountId
+    const club = await Club.findByPk(clubId);
+    if (!club) {
+      return res.status(404).json({ message: 'Club not found' });
+    }
+
+    club.stripeAccountId = stripeAccountId;
+    await club.save();
+
+    res.status(200).json({ message: 'Stripe account successfully linked to user and club.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
