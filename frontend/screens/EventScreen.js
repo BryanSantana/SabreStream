@@ -1,20 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, TextInput, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import RNPickerSelect from 'react-native-picker-select';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { getEventsByClubId, createEvent } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import EventCard from './EventCard';
 
 const EventScreen = ({ clubId }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [formData, setFormData] = useState({ name: '', date: '', location: '', type: 'Select an event type' });
   const { userInfo } = useContext(AuthContext);
   const userClub = userInfo['user']['clubId'];
   const userRole = userInfo['user']['role'];
   const userId = userInfo['user']['id'];
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -38,9 +42,14 @@ const EventScreen = ({ clubId }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleDateConfirm = (date) => {
+    setFormData({ ...formData, date: date.toISOString() });
+    setDatePickerVisibility(false);
+  };
+
   const handleSubmit = async () => {
     try {
-      await createEvent({ ...formData, clubId: userClub, userId: userId});
+      await createEvent({ ...formData, clubId: userClub, userId: userId });
       setModalVisible(false);
       setFormData({ name: '', date: '', location: '', type: 'Class' });
       const fetchedEvents = await getEventsByClubId(userClub);
@@ -49,14 +58,6 @@ const EventScreen = ({ clubId }) => {
       console.error('Error creating event:', error);
     }
   };
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
 
   return (
     <View style={styles.container}>
@@ -68,11 +69,7 @@ const EventScreen = ({ clubId }) => {
         data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.eventItem}>
-            <Text style={styles.eventName}>{item.name}</Text>
-            <Text>{item.date}</Text>
-            <Text>{item.location}</Text>
-          </View>
+          <EventCard event={item} userRole={userRole} />
         )}
       />
       <Modal isVisible={isModalVisible}>
@@ -84,11 +81,19 @@ const EventScreen = ({ clubId }) => {
             value={formData.name}
             onChangeText={(value) => handleFormChange('name', value)}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Date"
-            value={formData.date}
-            onChangeText={(value) => handleFormChange('date', value)}
+          <TouchableOpacity onPress={() => setDatePickerVisibility(true)}>
+            <TextInput
+              style={styles.input}
+              placeholder="Date"
+              value={formData.date ? new Date(formData.date).toLocaleString() : ''}
+              editable={false} // Disable manual editing
+            />
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleDateConfirm}
+            onCancel={() => setDatePickerVisibility(false)}
           />
           <TextInput
             style={styles.input}
@@ -127,13 +132,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  eventItem: {
-    marginBottom: 15,
-  },
-  eventName: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   modalContent: {
     backgroundColor: 'white',
@@ -183,4 +181,6 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 export default EventScreen;
+
+
 

@@ -9,6 +9,7 @@ const announcementRoutes = require('./routes/announcementRoutes');
 const paymentRoutes = require("./routes/paymentRoutes")
 const eventRoutes = require('./routes/eventRoutes');
 const accountRoutes = require('./routes/accountRoutes')
+const tierRoutes = require('./routes/tierRoutes')
 const dotenv = require('dotenv');
 
 dotenv.config()
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
+app.use('/api/tier', tierRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/clubs', clubRoutes);
 app.use('/api/events', eventRoutes);

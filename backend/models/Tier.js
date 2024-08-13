@@ -18,6 +18,10 @@ const Tier = sequelize.define('Tier', {
   frequency:{
     type:DataTypes.STRING,
     allowNull: false,
+  },
+  stripeAccountId:{
+    type:DataTypes.STRING,
+    allowNull: false
   }
 }, {
   timestamps:false,
