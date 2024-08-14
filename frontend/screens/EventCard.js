@@ -20,6 +20,7 @@ const EventCard = ({ event, userRole }) => {
       <Text style={styles.eventName}>{event.name}</Text>
       <Text>{formattedDate} at {formattedTime}</Text>
       <Text>{event.location}</Text>
+      <Text>{event.type}</Text>
       {userRole === 'member' && (
         <Button title="Register" onPress={() => handleRegister(event.id)} />
       )}
