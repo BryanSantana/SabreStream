@@ -4,17 +4,10 @@ import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-m
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const EventCard = ({ event, userRole, onEdit, onDelete }) => {
-  // Format the date
-  const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
+  const formattedStartDate = new Date(event.startDate).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  // Format the time
-  const formattedTime = new Date(event.date).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
   });
 
   return (
@@ -38,7 +31,7 @@ const EventCard = ({ event, userRole, onEdit, onDelete }) => {
           </Menu>
         )}
       </View>
-      <Text>{event.startDate} at {event.startTime}</Text>
+      <Text>{formattedStartDate} at {event.startTime}</Text>
       <Text>{event.location}</Text>
       <Text>{event.type}</Text>
       {userRole === 'member' && (
