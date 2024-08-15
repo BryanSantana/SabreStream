@@ -2,14 +2,26 @@ const Event = require('../models/Event');
 const User = require('../models/User');
 const UserEvent = require('../models/UserEvent');
 exports.createEvent = async (req, res) => {
-  const { name, date, location, type, clubId, userId } = req.body;
+  const { name, startDate, startTime, endDate, endTime, location, type, clubId, userId } = req.body;
+
   try {
-    const event = await Event.create({ name, date, location, type, clubId , userId});
+    const event = await Event.create({ 
+      name, 
+      startDate, 
+      startTime, 
+      endDate: endDate || null, 
+      endTime: endTime || null, 
+      location, 
+      type, 
+      clubId, 
+      userId 
+    });
     res.status(201).json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 exports.getEventsByClubId = async (req, res) => {
@@ -45,7 +57,7 @@ exports.getEventById = async (req, res) => {
 };
 
 exports.updateEvent = async (req, res) => {
-  const { name, date, location, clubId } = req.body;
+  const { name, startDate, startTime, endDate, endTime, location, clubId } = req.body;
 
   try {
     const event = await Event.findByPk(req.params.id);
@@ -54,8 +66,12 @@ exports.updateEvent = async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
+    // Update the event fields only if new values are provided, otherwise keep existing values
     event.name = name || event.name;
-    event.date = date || event.date;
+    event.startDate = startDate || event.startDate;
+    event.startTime = startTime || event.startTime;
+    event.endDate = endDate || event.endDate;
+    event.endTime = endTime || event.endTime;
     event.location = location || event.location;
     event.clubId = clubId || event.clubId;
 
@@ -66,6 +82,7 @@ exports.updateEvent = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.deleteEvent = async (req, res) => {
   try {

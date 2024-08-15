@@ -7,38 +7,55 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const CreateEventModal = ({ isVisible, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     name: '',
-    date: '',
-    time: '',
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
     location: '',
     type: ''
   });
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
+  const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
+  const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+  const [isEndTimePickerVisible, setEndTimePickerVisibility] = useState(false);
 
   const handleFormChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDateConfirm = (date) => {
-    setFormData({ ...formData, date: date.toLocaleDateString('en-US') });
-    setDatePickerVisibility(false);
+  const handleStartDateConfirm = (date) => {
+    setFormData({ ...formData, startDate: date.toLocaleDateString('en-US') });
+    setStartDatePickerVisibility(false);
   };
 
-  const handleTimeConfirm = (time) => {
-    setFormData({ ...formData, time: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) });
-    setTimePickerVisibility(false);
+  const handleStartTimeConfirm = (time) => {
+    setFormData({ ...formData, startTime: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) });
+    setStartTimePickerVisibility(false);
+  };
+
+  const handleEndDateConfirm = (date) => {
+    setFormData({ ...formData, endDate: date.toLocaleDateString('en-US') });
+    setEndDatePickerVisibility(false);
+  };
+
+  const handleEndTimeConfirm = (time) => {
+    setFormData({ ...formData, endTime: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) });
+    setEndTimePickerVisibility(false);
   };
 
   const handleSubmit = () => {
     onSubmit(formData);  // Pass the form data to the parent component
+    resetForm();  // Reset the form after submission
   };
 
   const resetForm = () => {
     setFormData({
       name: '',
-      date: '',
-      time: '',
+      startDate: '',
+      startTime: '',
+      endDate: '',
+      endTime: '',
       location: '',
       type: ''
     });
@@ -56,25 +73,48 @@ const CreateEventModal = ({ isVisible, onClose, onSubmit }) => {
           onChangeText={(value) => handleFormChange('name', value)}
         />
         <View style={styles.dateTimeContainer}>
-          <TouchableOpacity style={styles.datetime} onPress={() => setDatePickerVisibility(true)}>
-            <Text style={styles.dateTimeText}>{formData.date || 'Date'}</Text>
+          <TouchableOpacity style={styles.datetime} onPress={() => setStartDatePickerVisibility(true)}>
+            <Text style={styles.dateTimeText}>{formData.startDate || 'Start Date'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.datetime} onPress={() => setTimePickerVisibility(true)}>
-            <Text style={styles.dateTimeText}>{formData.time || 'Time'}</Text>
+          <TouchableOpacity style={styles.datetime} onPress={() => setStartTimePickerVisibility(true)}>
+            <Text style={styles.dateTimeText}>{formData.startTime || 'Start Time'}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.dateTimeContainer}>
+          <TouchableOpacity style={styles.datetime} onPress={() => setEndDatePickerVisibility(true)}>
+            <Text style={styles.dateTimeText}>{formData.endDate || 'End Date (Optional)'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.datetime} onPress={() => setEndTimePickerVisibility(true)}>
+            <Text style={styles.dateTimeText}>{formData.endTime || 'End Time (Optional)'}</Text>
           </TouchableOpacity>
         </View>
         <DateTimePickerModal
-          isVisible={isDatePickerVisible}
+          isVisible={isStartDatePickerVisible}
           mode="date"
-          onConfirm={handleDateConfirm}
-          onCancel={() => setDatePickerVisibility(false)}
+          onConfirm={handleStartDateConfirm}
+          onCancel={() => setStartDatePickerVisibility(false)}
           display={"inline"}
         />
         <DateTimePickerModal
-          isVisible={isTimePickerVisible}
+          isVisible={isStartTimePickerVisible}
           mode="time"
-          onConfirm={handleTimeConfirm}
-          onCancel={() => setTimePickerVisibility(false)}
+          onConfirm={handleStartTimeConfirm}
+          onCancel={() => setStartTimePickerVisibility(false)}
+          display={"spinner"}
+          minuteInterval={15}  // Set minute interval to 15
+        />
+        <DateTimePickerModal
+          isVisible={isEndDatePickerVisible}
+          mode="date"
+          onConfirm={handleEndDateConfirm}
+          onCancel={() => setEndDatePickerVisibility(false)}
+          display={"inline"}
+        />
+        <DateTimePickerModal
+          isVisible={isEndTimePickerVisible}
+          mode="time"
+          onConfirm={handleEndTimeConfirm}
+          onCancel={() => setEndTimePickerVisibility(false)}
           display={"spinner"}
           minuteInterval={15}  // Set minute interval to 15
         />
@@ -212,3 +252,4 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 export default CreateEventModal;
+

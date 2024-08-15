@@ -38,7 +38,7 @@ const EventCard = ({ event, userRole, onEdit, onDelete }) => {
           </Menu>
         )}
       </View>
-      <Text>{formattedDate} at {formattedTime}</Text>
+      <Text>{event.startDate} at {event.startTime}</Text>
       <Text>{event.location}</Text>
       <Text>{event.type}</Text>
       {userRole === 'member' && (

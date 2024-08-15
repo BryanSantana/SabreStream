@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getEventsByClubId, createEvent, deleteEvent, updateEvent } from '../services/api'; // Assuming you have delete and update event services
+import { getEventsByClubId, createEvent, deleteEvent, updateEvent } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import EventCard from './EventCard';
 import CreateEventModal from './CreateEventModal';
@@ -11,12 +11,20 @@ const EventScreen = ({ clubId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [formData, setFormData] = useState({ name: '', date: '', location: '', type: 'Select an event type' });
+  const [formData, setFormData] = useState({
+    name: '',
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    location: '',
+    type: 'Select an event type',
+  });
+
   const { userInfo } = useContext(AuthContext);
   const userClub = userInfo['user']['clubId'];
   const userRole = userInfo['user']['role'];
   const userId = userInfo['user']['id'];
-
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -38,24 +46,30 @@ const EventScreen = ({ clubId }) => {
   };
 
   const handleSubmit = async (formData) => {
-    const { name, date, location, type } = formData;
-    if (!name || !date || !location || !type) {
-      alert('All fields are required.');
+    const { name, startDate, startTime, location, type } = formData;
+    if (!name || !startDate || !startTime || !location || !type) {
+      alert('All required fields must be filled.');
       return;
     }
   
     try {
       await createEvent({ ...formData, clubId: userClub, userId: userId });
       setModalVisible(false);
-      setFormData({ name: '', date: '', location: '', type: 'Class' });
+      setFormData({
+        name: '',
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: '',
+        location: '',
+        type: 'Select an event type',
+      });
       const fetchedEvents = await getEventsByClubId(userClub);
       setEvents(fetchedEvents);
-      setFormData({ name: '', date: '', location: '', type: 'Class' });
     } catch (error) {
       console.error('Error creating event:', error);
     }
   };
-  
 
   const handleEditEvent = async (event) => {
     setFormData(event);
@@ -143,9 +157,6 @@ const styles = StyleSheet.create({
 });
 
 export default EventScreen;
-
-
-
 
 
 
