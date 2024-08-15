@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const EventCard = ({ event, userRole }) => {
+const EventCard = ({ event, userRole, onEdit, onDelete }) => {
   // Format the date
   const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -17,7 +19,25 @@ const EventCard = ({ event, userRole }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.eventName}>{event.name}</Text>
+      <View style={styles.header}>
+        <Text style={styles.eventName}>{event.name}</Text>
+        {/* Menu for edit and delete actions */}
+        {(userRole === 'admin' || userRole === 'coach') && (
+          <Menu>
+            <MenuTrigger>
+              <MaterialIcons name="more-vert" size={24} color="black" />
+            </MenuTrigger>
+            <MenuOptions>
+            <MenuOption onSelect={onEdit}>
+                <Text style={styles.editOption}>Edit</Text>
+              </MenuOption>
+              <MenuOption onSelect={onDelete}>
+                <Text style={styles.deleteOption}>Delete</Text>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
+        )}
+      </View>
       <Text>{formattedDate} at {formattedTime}</Text>
       <Text>{event.location}</Text>
       <Text>{event.type}</Text>
@@ -45,11 +65,24 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   eventName: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  editOption: {
+    color: 'black',
+  },
+  deleteOption: {
+    color: 'red',
+  },
 });
 
 export default EventCard;
+
+

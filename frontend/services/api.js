@@ -198,6 +198,16 @@ const unlikeAnnouncement = async (likeData) => {
       console.error('Error completing onboarding:', error);
     }
   };
+
+  export const deleteEvent = async (eventId) => {
+    const response = await fetch(`http://localhost:5001/api/events/${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  };
   
 
   
