@@ -1,17 +1,18 @@
-// AnnouncementScreen.js
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { getAnnouncementsByClubId, createAnnouncement, likeAnnouncement, unlikeAnnouncement } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import AnnouncementCard from './AnnouncementCard';
 import Modal from 'react-native-modal';
 
 const AnnouncementScreen = ({ clubId }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userInfo } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({ message: '' });
+  const { userInfo } = useContext(AuthContext);
   const userClub = userInfo['user']['clubId'];
   const userRole = userInfo['user']['role'];
   const userId = userInfo['user']['id'];
@@ -30,14 +31,6 @@ const AnnouncementScreen = ({ clubId }) => {
 
     fetchAnnouncements();
   }, [userClub]);
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
 
   const handleCreateAnnouncement = () => {
     setModalVisible(true);
@@ -89,31 +82,36 @@ const AnnouncementScreen = ({ clubId }) => {
     }
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Announcements</Text>
-      {userRole === 'admin' || userRole === 'coach' ? (
-        <Button title="Create Announcement" onPress={handleCreateAnnouncement} />
-      ) : null}
+      <View style={styles.header}>
+        <Text style={styles.title}>Announcements</Text>
+        {userRole === 'admin' || userRole === 'coach' ? (
+          <TouchableOpacity onPress={handleCreateAnnouncement} style={styles.iconButton}>
+            <Icon name="plus" size={12} color="#000000" />
+          </TouchableOpacity>
+        ) : null}
+      </View>
       <FlatList
         data={announcements}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.announcementItem}>
-            <Text style={styles.announcementMessage}>{item.message}</Text>
-            <Text>{new Date(item.date).toLocaleString()}</Text>
-            <Button 
-            style = {styles.announcementLikes} 
-            title = {String(item.likesCount)} 
-            onPress={() => handleLike(item.id)}
-            color={item.likedByCurrentUser ? 'red' : 'blue'}> 
-            </Button>
-            <Text>Posted by: {item.User.name}</Text>
-          </View>
+          <AnnouncementCard
+            announcement={item}
+            currentUserId={userId} // Pass the currentUserId to AnnouncementCard
+            onLike={() => handleLike(item.id)}
+          />
         )}
       />
-      <Modal isVisible={isModalVisible}>
+      <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Create Announcement</Text>
           <TextInput
@@ -122,8 +120,14 @@ const AnnouncementScreen = ({ clubId }) => {
             value={formData.message}
             onChangeText={(value) => handleFormChange('message', value)}
           />
-          <Button title="Submit" onPress={handleSubmit} />
-          <Button title="Cancel" onPress={() => setModalVisible(false)} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={[styles.button, styles.submitButton]} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setModalVisible(false)}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -136,41 +140,75 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
   },
-  announcementItem: {
-    marginBottom: 15,
-  },
-  announcementMessage: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  iconButton: {
+    padding: 10,
+    borderRadius: 50,
+    backgroundColor: '#e9ecef',
   },
   modalContent: {
-    backgroundColor: 'white',
-    padding: 22,
+    backgroundColor: '#ffffff',
+    padding: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
+    borderRadius: 10,
     borderColor: 'rgba(0, 0, 0, 0.1)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#000',
   },
   input: {
     width: '100%',
-    padding: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
+    padding: 12,
+    borderColor: '#000',
+    borderWidth: 2,
+    borderRadius: 8,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    color: '#000',
   },
-  announcementLikes: {
-    alignSelf: 'flex-end',
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 10,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '45%',
+  },
+  submitButton: {
+    backgroundColor: '#000',
+  },
+  cancelButton: {
+    backgroundColor: '#000',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
 export default AnnouncementScreen;
+

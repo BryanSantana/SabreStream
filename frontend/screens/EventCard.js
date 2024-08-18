@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,6 +12,7 @@ const EventCard = ({ event, userRole, onEdit, onDelete }) => {
   });
 
   return (
+    <TouchableOpacity>
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.eventName}>{event.name}</Text>
@@ -38,6 +40,7 @@ const EventCard = ({ event, userRole, onEdit, onDelete }) => {
         <Button title="Register" onPress={() => handleRegister(event.id)} />
       )}
     </View>
+    </TouchableOpacity>
   );
 };
 

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Screen</Text>
+      <Text style={styles.title}>Sabre Stream</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('Login')}
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
     marginBottom: 40,
     color: '#000', // Black text color
   },
